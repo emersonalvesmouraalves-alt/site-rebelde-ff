@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REBELDE FF — Likes, VIP e Auto-Like para Free Fire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0E14;
+    --surface: #131826;
+    --surface-2: #1B2233;
+    --line: #2A3348;
+    --flame: #FF5A1F;
+    --ember: #FFB020;
+    --text: #F5F3EE;
+    --text-muted: #8A93A6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope', sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  .display{font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:0.5px;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 24px;}
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:68px;}
+  .logo{font-size:1.1rem; letter-spacing:1px;}
+  .logo span{color:var(--flame);}
+  .nav-cta{
+    background:var(--flame); color:#0B0E14; font-weight:700;
+    padding:10px 18px; border-radius:8px; font-size:0.85rem;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .nav-cta:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,90,31,0.35);}
+  .hero{
+    position:relative;
+    padding:96px 0 80px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .embers{position:absolute; inset:0; pointer-events:none; z-index:0;}
+  .ember-dot{
+    position:absolute; bottom:-20px; border-radius:50%;
+    background:radial-gradient(circle, var(--ember), transparent 70%);
+    opacity:0; animation:rise linear infinite;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0); opacity:0;}
+    10%{opacity:.9;}
+    90%{opacity:.5;}
+    100%{transform:translateY(-620px) translateX(var(--drift,20px)); opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ember-dot{animation:none; display:none;}
+  }
+  .hero-inner{position:relative; z-index:1; max-width:680px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--ember); font-size:0.8rem; font-weight:700;
+    letter-spacing:1.5px; text-transform:uppercase; margin-bottom:20px;
+  }
+  .eyebrow::before{content:"●"; font-size:0.5rem;}
+  h1{
+    font-size:clamp(2.2rem, 6vw, 3.6rem);
+    line-height:1.05;
+    margin-bottom:20px;
+  }
+  h1 .accent{color:var(--flame);}
+  .hero p{color:var(--text-muted); font-size:1.05rem; max-width:520px; margin-bottom:32px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn-primary{
+    background:linear-gradient(135deg, var(--flame), var(--ember));
+    color:#0B0E14; font-weight:800; padding:15px 26px; border-radius:10px;
+    font-size:0.95rem; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,90,31,0.4);}
+  .btn-ghost{
+    border:1px solid var(--line); padding:15px 26px; border-radius:10px;
+    font-weight:700; font-size:0.95rem; color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .btn-ghost:hover{border-color:var(--flame); background:var(--surface);}
+  section{padding:72px 0;}
+  .section-head{margin-bottom:44px; max-width:560px;}
+  .section-tag{
+    color:var(--flame); font-size:0.78rem; font-weight:700;
+    letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px;
+  }
+  h2{font-size:clamp(1.6rem, 4vw, 2.2rem); margin-bottom:10px;}
+  .section-head p{color:var(--text-muted);}
+  .steps{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+    border-top:1px solid var(--line); padding-top:44px;
+  }
+  .step{position:relative; padding-left:0;}
+  .step .num{
+    font-family:'JetBrains Mono', monospace; color:var(--flame);
+    font-size:0.85rem; font-weight:700; display:block; margin-bottom:10px;
+  }
+  .step h3{font-size:1.05rem; margin-bottom:6px;}
+  .step p{color:var(--text-muted); font-size:0.9rem;}
+  .plans{
+    background:var(--surface);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .plan-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:16px;
+  }
+  .plan-card{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:14px;
+    padding:24px; display:flex; flex-direction:column; gap:14px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .plan-card:hover{border-color:var(--flame); transform:translateY(-3px);}
+  .plan-card.featured{border-color:var(--ember); position:relative;}
+  .plan-badge{
+    position:absolute; top:-11px; right:20px;
+    background:var(--ember); color:#0B0E14; font-size:0.68rem; font-weight:800;
+    padding:4px 10px; border-radius:999px; letter-spacing:0.5px; text-transform:uppercase;
+  }
+  .plan-qty{font-size:1.5rem; font-weight:800; font-family:'Archivo Black', sans-serif;}
+  .plan-qty small{font-size:0.9rem; color:var(--text-muted); font-weight:500; text-transform:none; font-family:'Manrope',sans-serif;}
+  .plan-days{color:var(--text-muted); font-size:0.85rem;}
+  .plan-price{
+    font-family:'JetBrains Mono', monospace; font-size:1.6rem; font-weight:700;
+    color:var(--ember); margin-top:auto;
+  }
+  .plan-price sup{font-size:0.9rem; opacity:0.8;}
+  .plan-buy{
+    display:block; text-align:center; padding:12px; border-radius:8px;
+    background:var(--flame); color:#0B0E14; font-weight:700; font-size:0.88rem;
+    transition:background .15s ease;
+  }
+  .plan-buy:hover{background:var(--ember);}
+  .vip-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px;}
+  .vip-card{
+    border:1px solid var(--line); border-radius:14px; padding:28px;
+    background:linear-gradient(160deg, var(--surface-2), var(--surface));
+  }
+  .vip-card h3{font-size:1.2rem; margin-bottom:6px;}
+  .vip-card .vip-likes{color:var(--text-muted); font-size:0.9rem; margin-bottom:18px;}
+  .vip-card .vip-price{font-family:'JetBrains Mono',monospace; font-size:1.8rem; color:var(--ember); font-weight:700; margin-bottom:18px;}
+  footer{padding:48px 0; text-align:center;}
+  footer .foot-brand{margin-bottom:8px; font-size:1rem;}
+  footer p{color:var(--text-muted); font-size:0.85rem;}
+  footer a{color:var(--flame); font-weight:700;}
+  @media (max-width:720px){
+    .steps{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo display">REBELDE <span>FF</span></div>
+    <a class="nav-cta" href="#planos">Ver pacotes</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="embers" id="embers"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Entrega na hora · Sem espera</div>
+    <h1 class="display">Suba de rank com <span class="accent">likes de verdade</span></h1>
+    <p>Pacotes de likes, VIP com auto-like diário e Booyah Pass — direto no seu UID, sem enrolação. Pagamento via Pix, confirmação pelo WhatsApp.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://wa.me/5582988631900" target="_blank" rel="noopener">💬 Falar no WhatsApp</a>
+      <a class="btn-ghost" href="#planos">Ver todos os pacotes</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Como funciona</div>
+      <h2>Três passos, likes na conta</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num mono">01</span>
+        <h3>Escolha o pacote</h3>
+        <p>Veja a quantidade de likes ou o plano VIP que combina com o que você precisa.</p>
+      </div>
+      <div class="step">
+        <span class="num mono">02</span>
+        <h3>Envie seu UID</h3>
+        <p>Manda o ID da sua conta Free Fire e confirma o pagamento via Pix.</p>
+      </div>
+      <div class="step">
+        <span class="num mono">03</span>
+        <h3>Receba na hora</h3>
+        <p>Os likes caem direto na sua conta, sem precisar instalar nada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="plans" id="planos">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Pacotes avulsos</div>
+      <h2>Escolha a quantidade de likes</h2>
+      <p>Envio distribuído — até 200 likes por dia, conforme o pacote escolhido.</p>
+    </div>
+    <div class="plan-grid">
+
+      <div class="plan-card">
+        <div class="plan-qty">200<small> likes</small></div>
+        <div class="plan-days">1 dia de entrega</div>
+        <div class="plan-price"><sup>R$</sup>2,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%20200%20likes%20(R%2402%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">400<small> likes</small></div>
+        <div class="plan-days">2 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>4,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%20400%20likes%20(R%2404%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">600<small> likes</small></div>
+        <div class="plan-days">3 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>6,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%20600%20likes%20(R%2406%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">800<small> likes</small></div>
+        <div class="plan-days">4 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>8,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%20800%20likes%20(R%2408%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card featured">
+        <span class="plan-badge">Mais pedido</span>
+        <div class="plan-qty">1.000<small> likes</small></div>
+        <div class="plan-days">5 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>10,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%201.000%20likes%20(R%2410%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">2.000<small> likes</small></div>
+        <div class="plan-days">10 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>15,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%202.000%20likes%20(R%2415%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">3.000<small> likes</small></div>
+        <div class="plan-days">15 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>20,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%203.000%20likes%20(R%2420%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">4.000<small> likes</small></div>
+        <div class="plan-days">20 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>25,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%204.000%20likes%20(R%2425%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">5.000<small> likes</small></div>
+        <div class="plan-days">25 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>30,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%205.000%20likes%20(R%2430%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-qty">10.000<small> likes</small></div>
+        <div class="plan-days">50 dias de entrega</div>
+        <div class="plan-price"><sup>R$</sup>55,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20pacote%20de%2010.000%20likes%20(R%2455%2C00)" target="_blank" rel="noopener">Comprar</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Auto-like</div>
+      <h2>Planos VIP com envio automático</h2>
+      <p>Likes caindo sozinhos todos os dias, sem precisar pedir de novo.</p>
+    </div>
+    <div class="vip-grid">
+      <div class="vip-card">
+        <h3>Semanal</h3>
+        <div class="vip-likes">Até 1.400 likes na semana · 200/dia</div>
+        <div class="vip-price">R$ 12,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20VIP%20Semanal%20(R%2412%2C00)" target="_blank" rel="noopener">Assinar</a>
+      </div>
+      <div class="vip-card">
+        <h3>Mensal</h3>
+        <div class="vip-likes">Até 6.000 likes no mês · 200/dia</div>
+        <div class="vip-price">R$ 35,00</div>
+        <a class="plan-buy" href="https://wa.me/5582988631900?text=Quero%20o%20VIP%20Mensal%20(R%2435%2C00)" target="_blank" rel="noopener">Assinar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-brand display">REBELDE FF</div>
+    <p>Dúvidas ou pacote personalizado? Fala com a gente no <a href="https://wa.me/5582988631900" target="_blank" rel="noopener">WhatsApp (82) 98863-1900</a></p>
+  </div>
+</footer>
+
+<script>
+  const container = document.getElementById('embers');
+  const count = window.innerWidth < 700 ? 10 : 18;
+  for (let i = 0; i < count; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'ember-dot';
+    const size = 3 + Math.random() * 5;
+    dot.style.width = size + 'px';
+    dot.style.height = size + 'px';
+    dot.style.left = Math.random() * 100 + '%';
+    dot.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+    dot.style.animationDuration = (6 + Math.random() * 6) + 's';
+    dot.style.animationDelay = (Math.random() * 8) + 's';
+    container.appendChild(dot);
+  }
+</script>
+
+</body>
+          </html>
