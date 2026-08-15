@@ -18,10 +18,10 @@ module.exports = async (req, res) => {
     return res.status(405).json({ erro: 'Metodo nao permitido' });
   }
 
-  const { uid, packageId } = req.body || {};
+  const { uid, packageId, nome, whatsapp } = req.body || {};
 
-  if (!uid || !packageId) {
-    return res.status(400).json({ erro: 'UID e pacote sao obrigatorios' });
+  if (!uid || !packageId || !nome || !whatsapp) {
+    return res.status(400).json({ erro: 'Nome, WhatsApp, UID e pacote sao obrigatorios' });
   }
 
   const pacote = PACOTES[packageId];
@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
         description: `Rebelde FF - ${pacote.likes} likes`,
         payment_method_id: 'pix',
         payer: { email: `comprador${Date.now()}@rebeldeff.com` },
-        metadata: { uid, packageId, likes: pacote.likes, dias: pacote.dias },
+        metadata: { uid, packageId, likes: pacote.likes, dias: pacote.dias, nome, whatsapp },
         notification_url: notificationUrl,
       }),
     });

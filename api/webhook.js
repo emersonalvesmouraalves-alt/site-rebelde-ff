@@ -33,6 +33,19 @@ async function saveUsos(gistId, usos) {
   });
 }
 
+async function notificarDono(texto) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.DONO_TELEGRAM_ID;
+  if (!token || !chatId) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: texto }),
+    });
+  } catch (e) {}
+}
+
 async function enviarLike(uid) {
   const url = `https://Like200.soyxapasse.com.br/api/v1/enviar?key=${process.env.FREEFIRE_API_KEY}&uid=${uid}&region=BR`;
   try {
@@ -65,6 +78,9 @@ module.exports = async (req, res) => {
     const meta = payment.metadata || {};
     const uid = meta.uid;
     const dias = meta.dias;
+    const nome = meta.nome || 'Nao informado';
+    const whatsapp = meta.whatsapp || 'Nao informado';
+    const valor = payment.transaction_amount;
 
     if (!uid || !dias) {
       return res.status(200).json({ ok: true });
@@ -92,6 +108,9 @@ module.exports = async (req, res) => {
 
     await saveUsos(gistId, usos);
     await enviarLike(uid);
+
+    const textoAviso = `💰 NOVA VENDA CONFIRMADA\n\nNome: ${nome}\nWhatsApp: ${whatsapp}\nUID: ${uid}\nValor: R$ ${valor}\nDias de auto-like: ${dias}\nPayment ID: ${paymentId}`;
+    await notificarDono(textoAviso);
 
     return res.status(200).json({ ok: true });
   } catch (err) {

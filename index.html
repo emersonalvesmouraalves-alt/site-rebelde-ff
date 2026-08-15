@@ -349,6 +349,8 @@
   <div style="background:#111;border-radius:16px;padding:24px;max-width:360px;width:100%;text-align:center;color:#fff;font-family:sans-serif;">
     <div id="pix-passo-uid">
       <h3 style="margin-top:0;">Informe seu UID</h3>
+      <input id="pix-nome-input" type="text" placeholder="Seu nome" style="width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;font-size:16px;box-sizing:border-box;margin-bottom:8px;">
+      <input id="pix-whatsapp-input" type="text" placeholder="Seu WhatsApp (com DDD)" style="width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;font-size:16px;box-sizing:border-box;margin-bottom:8px;">
       <input id="pix-uid-input" type="text" placeholder="Seu UID do Free Fire" style="width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;font-size:16px;box-sizing:border-box;">
       <button onclick="confirmarUid()" style="width:100%;margin-top:12px;padding:12px;border-radius:8px;border:none;background:#ff6a00;color:#fff;font-size:16px;font-weight:bold;">Gerar Pix</button>
       <button onclick="fecharPixModal()" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #444;background:transparent;color:#aaa;">Cancelar</button>
@@ -397,7 +399,11 @@ function fecharPixModal() {
 }
 
 async function confirmarUid() {
+  const nome = document.getElementById('pix-nome-input').value.trim();
+  const whatsapp = document.getElementById('pix-whatsapp-input').value.trim();
   const uid = document.getElementById('pix-uid-input').value.trim();
+  if (!nome) { alert('Digite seu nome'); return; }
+  if (!whatsapp) { alert('Digite seu WhatsApp'); return; }
   if (!uid) { alert('Digite seu UID'); return; }
 
   document.getElementById('pix-passo-uid').style.display = 'none';
@@ -407,7 +413,7 @@ async function confirmarUid() {
     const resp = await fetch('/api/create-pix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid: uid, packageId: pixPacoteAtual }),
+      body: JSON.stringify({ uid: uid, packageId: pixPacoteAtual, nome: nome, whatsapp: whatsapp }),
     });
     const data = await resp.json();
 
