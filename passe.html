@@ -256,8 +256,8 @@ async function carregarEstoque() {
     box.innerHTML = `
       🎫 Passe Booyah: <b>${data.totalPasses} disponiveis</b><br>
       🧑 Personagens: <b>${data.personagensDisponiveis} disponiveis</b><br>
-      👕 Trajes: <b>sob encomenda</b><br>
-      🎭 Emotes: <b>sob encomenda</b>
+      👕 Trajes: <b>${data.trajesDisponiveis} disponiveis</b><br>
+      🎭 Emotes: <b>${data.emotesDisponiveis} disponiveis</b>
     `;
   } catch (err) {
     document.getElementById('estoque-carregando').textContent = 'Erro ao carregar estoque.';

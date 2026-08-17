@@ -4,12 +4,16 @@ module.exports = async (req, res) => {
   try {
     const resp = await fetch(`${PASSE_BASE_URL}/api/v1/stock`);
     const data = await resp.json();
-    const pers = data.personagens || {};
+    const personagens = data.personagens || {};
+    const ninja = data.ninja || {};
+    const emotes = data.emotes || {};
 
     res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate');
     return res.status(200).json({
       totalPasses: data.total_passes ?? '?',
-      personagensDisponiveis: pers.disponivel ?? '?',
+      personagensDisponiveis: personagens.envios_disponiveis ?? '?',
+      trajesDisponiveis: ninja.envios_disponiveis ?? '?',
+      emotesDisponiveis: emotes.envios_disponiveis ?? '?',
     });
   } catch (err) {
     console.error('Erro ao buscar estoque:', err);
