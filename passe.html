@@ -146,6 +146,12 @@
   <input type="text" id="campo-uid" placeholder="Seu UID">
 </div>
 
+
+<div class="secao-titulo">📦 Estoque disponivel</div>
+<div class="produto" id="estoque-box" style="flex-direction:column;align-items:flex-start;gap:6px;">
+  <div id="estoque-carregando" style="color:#aaa;font-size:13px;">Carregando estoque...</div>
+  <div id="estoque-dados" style="display:none;width:100%;font-size:14px;line-height:1.8;"></div>
+</div>
 <div class="secao-titulo">🎫 Passe Booyah</div>
 <div class="produto">
   <div class="produto-nome">Passe Booyah (unidade)</div>
@@ -240,6 +246,25 @@ async function carregarEmotes() {
   }
 }
 carregarEmotes();
+async function carregarEstoque() {
+  try {
+    const resp = await fetch('/api/stock');
+    const data = await resp.json();
+    document.getElementById('estoque-carregando').style.display = 'none';
+    const box = document.getElementById('estoque-dados');
+    box.style.display = 'block';
+    box.innerHTML = `
+      🎫 Passe Booyah: <b>${data.totalPasses} disponiveis</b><br>
+      🧑 Personagens: <b>${data.personagensDisponiveis} disponiveis</b><br>
+      👕 Trajes: <b>sob encomenda</b><br>
+      🎭 Emotes: <b>sob encomenda</b>
+    `;
+  } catch (err) {
+    document.getElementById('estoque-carregando').textContent = 'Erro ao carregar estoque.';
+  }
+}
+carregarEstoque();
+
 
 function comprarTraje() {
   const modelo = document.getElementById('select-traje').value;
