@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REBELDE VENDAS - Passe & Skins</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #0d0d0d;
+    color: #f2f2f2;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 16px;
+  }
+  h1 {
+    text-align: center;
+    color: #ff3b3b;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .subtitulo {
+    text-align: center;
+    color: #aaa;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .dados {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 20px;
+  }
+  .dados label {
+    display: block;
+    font-size: 13px;
+    color: #ccc;
+    margin-top: 8px;
+  }
+  .dados input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #111;
+    color: #fff;
+    margin-top: 4px;
+    font-size: 15px;
+  }
+  .secao-titulo {
+    color: #ff3b3b;
+    font-size: 16px;
+    margin: 22px 0 10px;
+    border-left: 4px solid #ff3b3b;
+    padding-left: 8px;
+  }
+  .produto {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .produto-nome { font-size: 15px; }
+  .produto-preco { color: #4caf50; font-weight: bold; font-size: 15px; white-space: nowrap; }
+  .produto select {
+    padding: 8px;
+    border-radius: 6px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    margin-right: 8px;
+  }
+  button.comprar {
+    background: #ff3b3b;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button.comprar:active { background: #d92e2e; }
+  #emotes-lista { display: block; }
+  #emotes-carregando { color: #aaa; font-size: 13px; padding: 10px; }
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-box {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+  }
+  .modal-box img { width: 200px; height: 200px; margin: 10px auto; display: block; background: #fff; border-radius: 8px; }
+  .modal-box textarea {
+    width: 100%;
+    height: 60px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 11px;
+    resize: none;
+  }
+  .modal-box button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #btn-copiar { background: #4caf50; color: #fff; }
+  #btn-fechar { background: #333; color: #fff; }
+  #pix-passo-erro { color: #ff6b6b; }
+  #pix-passo-sucesso { color: #4caf50; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<h1>🔱 REBELDE VENDAS</h1>
+<div class="subtitulo">Passe Booyah • Skins • Emotes • Personagens</div>
+
+<div class="dados">
+  <label>Nome</label>
+  <input type="text" id="campo-nome" placeholder="Seu nome">
+  <label>WhatsApp</label>
+  <input type="text" id="campo-whatsapp" placeholder="(00) 00000-0000">
+  <label>UID do Free Fire</label>
+  <input type="text" id="campo-uid" placeholder="Seu UID">
+</div>
+
+<div class="secao-titulo">🎫 Passe Booyah</div>
+<div class="produto">
+  <div class="produto-nome">Passe Booyah (unidade)</div>
+  <div class="produto-preco">R$6,00</div>
+  <button class="comprar" onclick="comprar('passe', {})">Comprar</button>
+</div>
+
+<div class="secao-titulo">🧑 Personagens</div>
+<div class="produto">
+  <div class="produto-nome">Pacote de 50 Personagens</div>
+  <div class="produto-preco">R$4,00</div>
+  <button class="comprar" onclick="comprar('personagem', {})">Comprar</button>
+</div>
+
+<div class="secao-titulo">👕 Trajes</div>
+<div class="produto">
+  <div class="produto-nome">Escolha o modelo</div>
+  <div>
+    <select id="select-traje" onchange="atualizarPrecoTraje()">
+      <option value="branco">Ninja-branco (R$25,00)</option>
+      <option value="preto">Ninja-preto (R$25,00)</option>
+      <option value="diabinha">Diabinha (R$20,00)</option>
+      <option value="anjinha">Anjinha (R$20,00)</option>
+      <option value="astronauta">Astronauta (R$20,00)</option>
+      <option value="spacefarer">Spacefarer (R$20,00)</option>
+      <option value="velho_rabujento">Velho Rabujento (R$20,00)</option>
+    </select>
+    <button class="comprar" onclick="comprarTraje()">Comprar</button>
+  </div>
+</div>
+
+<div class="secao-titulo">🎭 Emotes</div>
+<div id="emotes-carregando">Carregando emotes disponiveis...</div>
+<div id="emotes-lista"></div>
+
+<div class="modal-overlay" id="pix-modal">
+  <div class="modal-box">
+    <div id="pix-passo-carregando">⏳ Gerando Pix, aguarde...</div>
+    <div id="pix-passo-qr" style="display:none;">
+      <img id="pix-qr-img" src="">
+      <textarea id="pix-copia-cola" readonly></textarea>
+      <button id="btn-copiar" onclick="copiarPix()">📋 Copiar codigo Pix</button>
+      <button id="btn-fechar" onclick="fecharPixModal()">Fechar</button>
+    </div>
+    <div id="pix-passo-sucesso" style="display:none;">
+      ✅ Pagamento confirmado!<br>Seu produto sera entregue em instantes.
+      <button id="btn-fechar" onclick="fecharPixModal()">Fechar</button>
+    </div>
+    <div id="pix-passo-erro" style="display:none;">
+      ❌ <span id="pix-erro-msg"></span>
+      <button id="btn-fechar" onclick="fecharPixModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let pixIntervalo;
+let emotesCache = [];
+
+const PRECO_TRAJE = {
+  branco: 25, preto: 25, diabinha: 20, anjinha: 20,
+  astronauta: 20, spacefarer: 20, velho_rabujento: 20,
+};
+
+function atualizarPrecoTraje() {}
+
+async function carregarEmotes() {
+  try {
+    const resp = await fetch('/api/emotes-list');
+    const data = await resp.json();
+    emotesCache = data.emotes || [];
+    const lista = document.getElementById('emotes-lista');
+    const carregando = document.getElementById('emotes-carregando');
+    if (!emotesCache.length) {
+      carregando.textContent = 'Nenhum emote disponivel no momento.';
+      return;
+    }
+    carregando.style.display = 'none';
+    lista.innerHTML = emotesCache.map(e => `
+      <div class="produto">
+        <div class="produto-nome">${e.nome}</div>
+        <div class="produto-preco">R$${e.preco.toFixed(2)}</div>
+        <button class="comprar" onclick="comprar('emote', {slug: '${e.slug}'})">Comprar</button>
+      </div>
+    `).join('');
+  } catch (err) {
+    document.getElementById('emotes-carregando').textContent = 'Erro ao carregar emotes.';
+  }
+}
+carregarEmotes();
+
+function comprarTraje() {
+  const modelo = document.getElementById('select-traje').value;
+  comprar('traje', { modelo });
+}
+
+function pegarDados() {
+  const nome = document.getElementById('campo-nome').value.trim();
+  const whatsapp = document.getElementById('campo-whatsapp').value.trim();
+  const uid = document.getElementById('campo-uid').value.trim();
+  if (!nome || !whatsapp || !uid) {
+    alert('Preencha nome, WhatsApp e UID antes de comprar.');
+    return null;
+  }
+  return { nome, whatsapp, uid };
+}
+
+async function comprar(tipo, extra) {
+  const dados = pegarDados();
+  if (!dados) return;
+
+  document.getElementById('pix-modal').style.display = 'flex';
+  document.getElementById('pix-passo-carregando').style.display = 'block';
+  document.getElementById('pix-passo-qr').style.display = 'none';
+  document.getElementById('pix-passo-sucesso').style.display = 'none';
+  document.getElementById('pix-passo-erro').style.display = 'none';
+
+  try {
+    const resp = await fetch('/api/create-pix-passe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ tipo, uid: dados.uid, nome: dados.nome, whatsapp: dados.whatsapp }, extra)),
+    });
+    const data = await resp.json();
+
+    if (!resp.ok || !data.qrCodeBase64) {
+      throw new Error(data.erro || 'Falha ao gerar Pix');
+    }
+
+    document.getElementById('pix-qr-img').src = 'data:image/png;base64,' + data.qrCodeBase64;
+    document.getElementById('pix-copia-cola').value = data.qrCode;
+    document.getElementById('pix-passo-carregando').style.display = 'none';
+    document.getElementById('pix-passo-qr').style.display = 'block';
+
+    pixIntervalo = setInterval(async () => {
+      try {
+        const chk = await fetch('/api/check-payment?id=' + data.paymentId);
+        const chkData = await chk.json();
+        if (chkData.status === 'approved') {
+          clearInterval(pixIntervalo);
+          document.getElementById('pix-passo-qr').style.display = 'none';
+          document.getElementById('pix-passo-sucesso').style.display = 'block';
+        }
+      } catch (e) {}
+    }, 5000);
+
+  } catch (err) {
+    document.getElementById('pix-passo-carregando').style.display = 'none';
+    document.getElementById('pix-passo-erro').style.display = 'block';
+    document.getElementById('pix-erro-msg').textContent = err.message;
+  }
+}
+
+function fecharPixModal() {
+  clearInterval(pixIntervalo);
+  document.getElementById('pix-modal').style.display = 'none';
+}
+
+function copiarPix() {
+  const el = document.getElementById('pix-copia-cola');
+  el.select();
+  document.execCommand('copy');
+  alert('Codigo copiado!');
+}
+</script>
+</body>
+</html>
