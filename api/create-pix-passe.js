@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
 
     if (!mpResponse.ok) {
       console.error('Erro Mercado Pago:', data);
-      return res.status(500).json({ erro: 'Falha ao criar pagamento' });
+      return res.status(500).json({ erro: 'Falha ao criar pagamento', detalhe: data });
     }
 
     const txData = data.point_of_interaction && data.point_of_interaction.transaction_data;
